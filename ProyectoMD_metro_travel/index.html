@@ -12,8 +12,8 @@
     <header class="hero-card module-gap">
       <div>
         <p class="eyebrow">ProyectoMD_metro_travel</p>
-        <h1>Optimizador de rutas aéreas con Dijkstra y visualización clara del grafo.</h1>
-        <p class="hero-subtitle">Calcula una única ruta resultante según el criterio seleccionado y visualízala de forma más limpia.</p>
+        <h1>Optimizador de rutas aéreas </h1>
+        
       </div>
     </header>
 
@@ -21,7 +21,7 @@
       <div class="section-head">
         <div>
           <h2>Archivos de datos</h2>
-          <p class="muted">Puedes usar los archivos por defecto o cargar tus propios archivos JSON y CSV.</p>
+          <p class="muted">Los archivos cities.json y flights.csv se cargan automáticamente al iniciar la aplicación, aunque también puedes subir tus propios archivos JSON y CSV.</p>
         </div>
       </div>
 
@@ -29,13 +29,13 @@
         <div class="upload-box">
           <label for="citiesFile">Ciudades (JSON)</label>
           <input id="citiesFile" type="file" accept=".json,application/json" />
-          <small id="citiesFileLabel">Ningún archivo seleccionado</small>
+          
 
         </div>
         <div class="upload-box">
           <label for="flightsFile">Vuelos (CSV)</label>
           <input id="flightsFile" type="file" accept=".csv,text/csv" />
-          <small id="flightsFileLabel">Ningún archivo seleccionado</small>
+          
         </div>
         <div class="upload-actions">
           <button id="reloadBtn" class="btn btn-secondary">Recargar datos</button>
@@ -144,7 +144,7 @@
       <div class="section-head">
         <div>
           <h2>Visualización del grafo</h2>
-          <p class="muted">Se utiliza Cytoscape si está disponible; si no, se activa una visualización SVG integrada como respaldo.</p>
+          
         </div>
       </div>
       <div class="graph-wrap">
@@ -153,6 +153,7 @@
       <div id="graphSummary" class="graph-summary">Aún no se ha calculado una ruta.</div>
     </section>
   </div>
+  <div id="toast" class="toast toast-hidden"></div>
 
   <script type="module" src="js/app.js"></script>
 </body>

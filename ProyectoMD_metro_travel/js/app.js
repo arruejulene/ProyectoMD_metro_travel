@@ -14,6 +14,8 @@ const state = {
   },
 };
 
+let toastTimer = null;
+
 const elements = {
   originSelect: document.getElementById("originSelect"),
   destinationSelect: document.getElementById("destinationSelect"),
@@ -34,6 +36,7 @@ const elements = {
   reportBox: document.getElementById("reportBox"),
   graphSummary: document.getElementById("graphSummary"),
   graphCanvas: document.getElementById("graphCanvas"),
+  toast: document.getElementById("toast"),
 };
 
 init();
@@ -121,10 +124,12 @@ async function loadData() {
 
     applyLoadedData(payload);
     renderIdleState(payload.message || "Datos cargados correctamente.");
+    showToast(payload.message || "Datos cargados correctamente.", "success");
   } catch (error) {
     renderLoadError(error.message);
+    showToast(error.message || "No se pudieron cargar los datos.", "error");
   }
-}
+} 
 
 function applyLoadedData(payload) {
   state.cities = payload.cities || {};
@@ -224,6 +229,7 @@ async function calculateRoute() {
 
   if (origin === destination) {
     setStatus("El origen y el destino no pueden ser iguales.", false);
+    showToast("El origen y el destino no pueden ser iguales.", "error")
     resetSelectedRoute("Ruta pendiente");
     return;
   }
@@ -245,23 +251,25 @@ async function calculateRoute() {
     const payload = await response.json();
 
     if (!payload.ok) {
-      const reason =
-        payload.message ||
-        payload.result?.reason ||
-        "No existe una ruta válida con las restricciones seleccionadas.";
+    const reason =
+      payload.message ||
+      payload.result?.reason ||
+      "No existe una ruta válida con las restricciones seleccionadas.";
 
-      state.activeResult = null;
-      setStatus(reason, false);
-      resetSelectedRoute("Sin ruta válida");
-      elements.reportBox.textContent = buildFailureReport(origin, destination, hasVisa, criterion, reason);
-      elements.graphSummary.textContent = "No existe ruta válida para los parámetros actuales.";
-      drawGraph(elements.graphCanvas, state.cities, state.flights, []);
-      return;
-    }
+    state.activeResult = null;
+    setStatus(reason, false);
+    showToast(`Error: ${reason}`, "error");
+    resetSelectedRoute("Sin ruta válida");
+    elements.reportBox.textContent = buildFailureReport(origin, destination, hasVisa, criterion, reason);
+    elements.graphSummary.textContent = "No existe ruta válida para los parámetros actuales.";
+    drawGraph(elements.graphCanvas, state.cities, state.flights, []);
+    return;
+  }
 
     state.activeResult = payload.result;
     renderSelectedRoute(payload.result, criterion);
     setStatus(payload.message || "Ruta calculada correctamente.", true);
+    showToast("Ruta calculada correctamente.", "success");
     elements.reportBox.textContent = buildSuccessReport(origin, destination, hasVisa, criterion, payload.result);
     elements.graphSummary.textContent = [
       `Ruta activa: ${formatPath(payload.result.path, false)}.`,
@@ -271,8 +279,12 @@ async function calculateRoute() {
     ].join(" ");
 
     drawGraph(elements.graphCanvas, state.cities, state.flights, payload.result.path);
+
+    drawGraph(elements.graphCanvas, state.cities, state.flights, payload.result.path);
   } catch (error) {
-    setStatus(error.message || "No se pudo calcular la ruta.", false);
+    const message = error.message || "No se pudo calcular la ruta.";
+    setStatus(message, false);
+    showToast(`Error: ${message}`, "error");
     resetSelectedRoute("Sin ruta válida");
   }
 }
@@ -342,4 +354,18 @@ function formatPath(path, withNames) {
 function setStatus(message, ok) {
   elements.statusMessage.textContent = message;
   elements.statusMessage.className = ok ? "status-ok" : "status-error";
+}
+
+function showToast(message, type = "success") {
+  const toast = elements.toast;
+  if (!toast) return;
+
+  clearTimeout(toastTimer);
+
+  toast.textContent = message;
+  toast.className = `toast toast-show ${type === "success" ? "toast-success" : "toast-error"}`;
+
+  toastTimer = setTimeout(() => {
+    toast.className = "toast toast-hidden";
+  }, 2600);
 }
