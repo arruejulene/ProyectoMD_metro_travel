@@ -1,0 +1,14 @@
+[
+  {"code": "CCS", "name": "Caracas", "requiresVisa": false},
+  {"code": "AUA", "name": "Aruba", "requiresVisa": true},
+  {"code": "CUR", "name": "Curazao", "requiresVisa": true},
+  {"code": "BON", "name": "Bonaire", "requiresVisa": true},
+  {"code": "SXM", "name": "San Martín", "requiresVisa": true},
+  {"code": "SBH", "name": "San Bartolomé", "requiresVisa": false},
+  {"code": "PTP", "name": "Pointe-à-Pitre (Guadalupe)", "requiresVisa": false},
+  {"code": "FDF", "name": "Fort-de-France (Martinica)", "requiresVisa": false},
+  {"code": "SDQ", "name": "Santo Domingo", "requiresVisa": true},
+  {"code": "PAP", "name": "Port-au-Prince (Haití)", "requiresVisa": false},
+  {"code": "POS", "name": "Puerto España (Trinidad)", "requiresVisa": false},
+  {"code": "BGI", "name": "Barbados", "requiresVisa": false}
+]

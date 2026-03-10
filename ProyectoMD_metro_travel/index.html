@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProyectoMD_metro_travel</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://unpkg.com/cytoscape@3.27.0/dist/cytoscape.min.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero-card module-gap">
+      <div>
+        <p class="eyebrow">ProyectoMD_metro_travel</p>
+        <h1>Optimizador de rutas aéreas con Dijkstra y visualización clara del grafo.</h1>
+        <p class="hero-subtitle">Calcula una única ruta resultante según el criterio seleccionado y visualízala de forma más limpia.</p>
+      </div>
+    </header>
+
+    <section class="card uploader-card module-gap">
+      <div class="section-head">
+        <div>
+          <h2>Archivos de datos</h2>
+          <p class="muted">Puedes usar los archivos por defecto o cargar tus propios archivos JSON y CSV.</p>
+        </div>
+      </div>
+
+      <div class="grid upload-grid">
+        <div class="upload-box">
+          <label for="citiesFile">Ciudades (JSON)</label>
+          <input id="citiesFile" type="file" accept=".json,application/json" />
+          <small id="citiesFileLabel">Usando data/cities.json</small>
+        </div>
+        <div class="upload-box">
+          <label for="flightsFile">Vuelos (CSV)</label>
+          <input id="flightsFile" type="file" accept=".csv,text/csv" />
+          <small id="flightsFileLabel">Usando data/flights.csv</small>
+        </div>
+        <div class="upload-actions">
+          <button id="reloadBtn" class="btn btn-secondary">Recargar datos</button>
+          <button id="resetBtn" class="btn btn-ghost">Volver a datos base</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card form-card module-gap">
+      <div class="section-head">
+        <div>
+          <h2>Buscar ruta</h2>
+          <p class="muted">Selecciona origen, destino, visa y criterio de optimización.</p>
+        </div>
+      </div>
+
+      <div class="grid form-grid">
+        <div class="field">
+          <label for="originSelect">Origen</label>
+          <select id="originSelect"></select>
+        </div>
+
+        <div class="field">
+          <label for="destinationSelect">Destino</label>
+          <select id="destinationSelect"></select>
+        </div>
+
+        <div class="field checkbox-field">
+          <label>Visa</label>
+          <label class="check-pill">
+            <input id="visaCheckbox" type="checkbox" />
+            <span>El pasajero tiene visa</span>
+          </label>
+        </div>
+
+        <div class="field radio-field">
+          <label>Enfoque</label>
+          <div class="radio-wrap">
+            <label class="radio-pill"><input type="radio" name="criterion" value="cost" checked /> Menor costo</label>
+            <label class="radio-pill"><input type="radio" name="criterion" value="stops" /> Menos escalas</label>
+          </div>
+        </div>
+
+        <div class="field action-field">
+          <label>&nbsp;</label>
+          <button id="calculateBtn" class="btn btn-primary">Calcular ruta</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card route-card module-gap">
+      <div class="section-head compact-head">
+        <div>
+          <h2>Ruta:</h2>
+          <p id="statusMessage" class="status-ok">Esperando cálculo.</p>
+        </div>
+      </div>
+      <div id="selectedRouteBox" class="selected-route-box">Ruta pendiente</div>
+      <div class="route-metrics">
+        <div class="metric-box">
+          <span class="metric-label">Enfoque</span>
+          <strong id="selectedModeValue">--</strong>
+        </div>
+        <div class="metric-box">
+          <span class="metric-label">Costo total</span>
+          <strong id="selectedCostValue">--</strong>
+        </div>
+        <div class="metric-box">
+          <span class="metric-label">Escalas</span>
+          <strong id="selectedStopsValue">--</strong>
+        </div>
+        <div class="metric-box">
+          <span class="metric-label">Tramos</span>
+          <strong id="selectedSegmentsValue">--</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid detail-grid module-gap">
+      <article class="card">
+        <div class="section-head">
+          <div>
+            <h2>Resultado detallado</h2>
+            <p class="muted">Resumen textual del cálculo realizado.</p>
+          </div>
+        </div>
+        <pre id="reportBox" class="report-box"></pre>
+      </article>
+
+      <article class="card legend-card">
+        <div class="section-head">
+          <div>
+            <h2>Leyenda</h2>
+            <p class="muted">Colores usados en el grafo.</p>
+          </div>
+        </div>
+        <div class="legend-list">
+          <div><span class="legend-dot free"></span> Ciudad libre</div>
+          <div><span class="legend-dot visa"></span> Requiere visa</div>
+          <div><span class="legend-dot active"></span> Ruta seleccionada</div>
+        </div>
+      </article>
+    </section>
+
+    <section class="card graph-card module-gap">
+      <div class="section-head">
+        <div>
+          <h2>Visualización del grafo</h2>
+          <p class="muted">Se utiliza Cytoscape si está disponible; si no, se activa una visualización SVG integrada como respaldo.</p>
+        </div>
+      </div>
+      <div class="graph-wrap">
+        <div id="graphCanvas"></div>
+      </div>
+      <div id="graphSummary" class="graph-summary">Aún no se ha calculado una ruta.</div>
+    </section>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
